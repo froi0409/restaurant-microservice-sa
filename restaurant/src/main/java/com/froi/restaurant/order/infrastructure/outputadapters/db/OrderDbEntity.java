@@ -1,4 +1,4 @@
-package com.froi.restaurant.order.infrastructure.outputadapters;
+package com.froi.restaurant.order.infrastructure.outputadapters.db;
 
 import com.froi.restaurant.order.domain.Order;
 import jakarta.persistence.Column;

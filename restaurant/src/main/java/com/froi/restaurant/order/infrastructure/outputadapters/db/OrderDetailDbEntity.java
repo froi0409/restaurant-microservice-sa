@@ -1,4 +1,4 @@
-package com.froi.restaurant.order.infrastructure.outputadapters;
+package com.froi.restaurant.order.infrastructure.outputadapters.db;
 
 import com.froi.restaurant.dish.domain.Dish;
 import jakarta.persistence.Column;
@@ -37,6 +37,21 @@ public class OrderDetailDbEntity {
 
     @Column
     private String note;
+
+    public Dish toDomain() {
+        return Dish.builder()
+                .currentPrice(dishPrice)
+                .cost(dishCost)
+                .build();
+    }
+
+    public Dish toDomainDishId() {
+        return Dish.builder()
+                .name(dish)
+                .currentPrice(dishPrice)
+                .cost(dishCost)
+                .build();
+    }
 
     public static OrderDetailDbEntity fromDomain(Dish dish, String orderId) {
         return new OrderDetailDbEntity(

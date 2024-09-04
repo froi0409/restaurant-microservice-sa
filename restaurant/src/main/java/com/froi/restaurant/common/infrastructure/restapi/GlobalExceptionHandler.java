@@ -3,6 +3,7 @@ package com.froi.restaurant.common.infrastructure.restapi;
 
 import com.froi.restaurant.common.exceptions.DuplicatedEntityException;
 import com.froi.restaurant.common.exceptions.IllegalEnumException;
+import com.froi.restaurant.common.exceptions.NetworkMicroserviceException;
 import com.froi.restaurant.dish.domain.exceptions.DishException;
 import com.froi.restaurant.order.domain.exceptions.OrderException;
 import com.froi.restaurant.restaurant.domain.exceptions.RestaurantException;
@@ -32,6 +33,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleIllegalEnumException(IllegalEnumException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(NetworkMicroserviceException.class)
+    public ResponseEntity<String> handleNetworkMicroserviceException(NetworkMicroserviceException e) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(e.getMessage());
     }
 

@@ -1,11 +1,16 @@
 package com.froi.restaurant.order.infrastructure.inputadapters.restapi;
 
 import com.froi.restaurant.common.WebAdapter;
+import com.froi.restaurant.common.exceptions.NetworkMicroserviceException;
 import com.froi.restaurant.order.application.makeorderusecase.MakeOrderRequest;
+import com.froi.restaurant.order.application.paidorderusecase.PayOrderRequest;
 import com.froi.restaurant.order.domain.exceptions.OrderException;
 import com.froi.restaurant.order.infrastructure.inputports.MakeOrderInputPort;
+import com.froi.restaurant.order.infrastructure.inputports.PayOrderInputPort;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderControllerAdapter {
 
     private MakeOrderInputPort makeOrderInputPort;
+    private PayOrderInputPort payOrderInputPort;
 
     @Autowired
-    public OrderControllerAdapter(MakeOrderInputPort makeOrderInputPort) {
+    public OrderControllerAdapter(MakeOrderInputPort makeOrderInputPort, PayOrderInputPort payOrderInputPort) {
         this.makeOrderInputPort = makeOrderInputPort;
+        this.payOrderInputPort = payOrderInputPort;
     }
 
     @PostMapping("/make")
@@ -30,6 +37,18 @@ public class OrderControllerAdapter {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @PostMapping("/pay")
+    public ResponseEntity<byte[]> payOrder(@RequestBody PayOrderRequest payOrderRequest) throws OrderException, NetworkMicroserviceException, NetworkMicroserviceException {
+        byte[] response = payOrderInputPort.payOrder(payOrderRequest);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=factura_restaurante.pdf");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(response);
     }
 
 }

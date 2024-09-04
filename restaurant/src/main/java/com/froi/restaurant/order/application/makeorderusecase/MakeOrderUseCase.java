@@ -5,7 +5,7 @@ import com.froi.restaurant.dish.domain.Dish;
 import com.froi.restaurant.order.domain.Order;
 import com.froi.restaurant.order.domain.exceptions.OrderException;
 import com.froi.restaurant.order.infrastructure.inputports.MakeOrderInputPort;
-import com.froi.restaurant.order.infrastructure.outputadapters.OrderDbOutputAdapter;
+import com.froi.restaurant.order.infrastructure.outputadapters.db.OrderDbOutputAdapter;
 import com.froi.restaurant.restaurant.domain.Restaurant;
 import com.froi.restaurant.restaurant.infrastructure.outputadapters.RestaurantDbOutputAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
