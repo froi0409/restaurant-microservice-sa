@@ -19,21 +19,29 @@ import java.util.UUID;
 public class Order {
     private UUID id;
     private Restaurant restaurant;
+    private String waiter;
+    String orderName;
     private LocalDateTime date;
     private LocalDateTime paidDate;
     private List<Dish> orderDetail;
     private List<OrderDiscount> discounts;
     private double total;
+    private double subtotal;
 
     public void validate() throws OrderException {
         if (paidDate != null && paidDate.isBefore(date)) {
             throw new OrderException("Paid date cannot be before order date");
         }
+        if (orderDetail == null || orderDetail.isEmpty()) {
+            throw new OrderException("Order must have at least one dish");
+        }
     }
 
     public void calculateTotal() {
         total = orderDetail.stream().mapToDouble(Dish::getCurrentPrice).sum();
-        total -= discounts.stream().mapToDouble(OrderDiscount::getDiscount).sum();
+        if (discounts != null) {
+            total -= discounts.stream().mapToDouble(OrderDiscount::getDiscount).sum();
+        }
     }
 
 }

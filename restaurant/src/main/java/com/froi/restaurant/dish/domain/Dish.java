@@ -17,6 +17,7 @@ public class Dish {
     private String name;
     private double cost;
     private double currentPrice;
+    private String note;
 
     public void validate() throws DishException {
         if (name == null || name.isBlank()) {
