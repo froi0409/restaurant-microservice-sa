@@ -6,7 +6,7 @@ import com.froi.restaurant.dish.domain.Dish;
 import com.froi.restaurant.dish.infrastructure.outputadapters.DishDbOutputAdapter;
 import com.froi.restaurant.order.domain.Order;
 import com.froi.restaurant.order.domain.exceptions.OrderException;
-import com.froi.restaurant.order.infrastructure.inputports.PayOrderInputPort;
+import com.froi.restaurant.order.infrastructure.inputports.restapi.PayOrderInputPort;
 import com.froi.restaurant.order.infrastructure.outputadapters.db.OrderDbOutputAdapter;
 import com.froi.restaurant.order.infrastructure.outputports.restapi.PayBillOutputPort;
 import com.froi.restaurant.restaurant.domain.Restaurant;

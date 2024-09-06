@@ -1,4 +1,4 @@
-package com.froi.restaurant.order.infrastructure.inputports;
+package com.froi.restaurant.order.infrastructure.inputports.restapi;
 
 
 import com.froi.restaurant.order.application.makeorderusecase.MakeOrderRequest;
