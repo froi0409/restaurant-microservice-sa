@@ -32,11 +32,11 @@ public class OrderControllerAdapter {
     }
 
     @PostMapping("/make")
-    public ResponseEntity<Void> makeOrder(@RequestBody MakeOrderRequest makeOrderRequest) throws OrderException {
-        makeOrderInputPort.makeOrder(makeOrderRequest);
+    public ResponseEntity<String> makeOrder(@RequestBody MakeOrderRequest makeOrderRequest) throws OrderException {
+        String order = makeOrderInputPort.makeOrder(makeOrderRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .build();
+                .body(order);
     }
 
     @PostMapping("/pay")

@@ -1,7 +1,7 @@
 package com.froi.restaurant.dish.infrastructure.outputadapters;
 
 import com.froi.restaurant.common.PersistenceAdapter;
-import com.froi.restaurant.dish.infrastructure.outputports.FindDishOutputPort;
+import com.froi.restaurant.dish.infrastructure.outputports.db.FindDishOutputPort;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 

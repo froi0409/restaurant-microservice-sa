@@ -27,7 +27,7 @@ public class MakeOrderUseCase implements MakeOrderInputPort {
     }
 
     @Override
-    public void makeOrder(MakeOrderRequest makeOrderRequest) throws OrderException {
+    public String makeOrder(MakeOrderRequest makeOrderRequest) throws OrderException {
         Restaurant restaurant = restaurantDbOutputAdapter.findRestaurantById(makeOrderRequest.getRestaurantId());
 
         List<Dish> orderDishes = new ArrayList<>();
@@ -43,6 +43,7 @@ public class MakeOrderUseCase implements MakeOrderInputPort {
         order.validate();
         order.calculateTotal();
 
-        orderDbOutputAdapter.makeOrder(order);
+        Order orderEntity = orderDbOutputAdapter.makeOrder(order);
+        return orderEntity.getId().toString();
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/resturants/v1/dishes")
+@RequestMapping("/restaurants/v1/dishes")
 @WebAdapter
 public class DishControllerAdapter {
     private ExistsDishInputPort existsDishInputPort;

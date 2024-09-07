@@ -47,6 +47,7 @@ public class OrderDetailDbEntity {
 
     public Dish toDomainDishId() {
         return Dish.builder()
+                .id(UUID.fromString(dish))
                 .name(dish)
                 .currentPrice(dishPrice)
                 .cost(dishCost)

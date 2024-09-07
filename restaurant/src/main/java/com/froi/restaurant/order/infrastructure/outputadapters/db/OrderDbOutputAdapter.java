@@ -48,7 +48,8 @@ public class OrderDbOutputAdapter implements MakeOrderOutputPort, FindOrderOutpu
         Order order = orderDbRepository.findById(orderId).map(OrderDbEntity::toDomain)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Order with id %s not found", orderId)));
 
-        List<Dish> orderDetails = orderDetailDbRepository.findAllByOrder(orderId).stream()
+        List<Dish> orderDetails = orderDetailDbRepository.findAllByOrder(orderId)
+                .stream()
                 .map(OrderDetailDbEntity::toDomainDishId)
                 .toList();
 
