@@ -2,6 +2,7 @@ package com.froi.restaurant.order.infrastructure.outputadapters.restapi;
 
 import com.froi.restaurant.order.application.paidorderusecase.BillDiscount;
 import com.froi.restaurant.order.infrastructure.outputports.restapi.FindDiscountsOutputPort;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,13 @@ public class FindDiscountsOutputAdapter implements FindDiscountsOutputPort {
     @Value("${discounts.url}")
     private String discountsUrl;
 
+    private RestTemplate restTemplate;
+
+    @Autowired
+    public FindDiscountsOutputAdapter(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
     @Override
     public BillDiscount findDishDiscount(String dishId, LocalDate date) {
         String url = discountsUrl + "/v1/discounts/findDishDiscount/" + dishId + "/" + date;
@@ -32,7 +40,6 @@ public class FindDiscountsOutputAdapter implements FindDiscountsOutputPort {
     }
 
     private BillDiscount getDiscount(String url) {
-        RestTemplate restTemplate = new RestTemplate();
         try {
             HttpHeaders headers = new HttpHeaders();
 

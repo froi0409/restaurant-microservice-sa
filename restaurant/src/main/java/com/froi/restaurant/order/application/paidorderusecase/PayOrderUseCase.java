@@ -89,7 +89,7 @@ public class PayOrderUseCase implements PayOrderInputPort {
         if (payOrderRequest.isHasDiscount() && payOrderRequest.getCustomerNit() != null) {
             BillDiscount customerDiscount = findDiscountsOutputAdapter.findCustomerDiscount(payOrderRequest.getCustomerNit(), LocalDate.now());
             if (customerDiscount != null) {
-                double percentage = (order.getTotal() / 100) * customerDiscount.getDiscounted();
+                double percentage = Math.round((order.getTotal() / 100) * customerDiscount.getDiscounted() * 100.0) / 100.0;
                 BillDiscount billDiscount = new BillDiscount("Customer Discount-" + customerDiscount.getDescription(), percentage);
                 billDiscounts.add(billDiscount);
             }
