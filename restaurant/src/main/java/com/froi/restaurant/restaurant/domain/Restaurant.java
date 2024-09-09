@@ -34,10 +34,10 @@ public class Restaurant {
         if (hotel != null && hotel.isEmpty()) {
             throw new RestaurantException("Hotel cannot be empty");
         }
-        if (StringUtils.isNumeric(phone1)) {
+        if (!StringUtils.isNumeric(phone1)) {
             throw new RestaurantException(String.format("Phone 1 must be a number, %s is not a number", phone1));
         }
-        if (phone2 != null && StringUtils.isNumeric(phone2)) {
+        if (phone2 != null && !StringUtils.isNumeric(phone2)) {
             throw new RestaurantException(String.format("Phone 2 must be a number, %s is not a number", phone2));
         }
     }

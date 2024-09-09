@@ -4,21 +4,18 @@ import com.froi.restaurant.common.PersistenceAdapter;
 import com.froi.restaurant.dish.domain.Dish;
 import com.froi.restaurant.dish.infrastructure.outputadapters.DishDbEntity;
 import com.froi.restaurant.dish.infrastructure.outputadapters.DishDbEntityRepository;
-import com.froi.restaurant.order.application.makeorderusecase.MakeOrderRequest;
 import com.froi.restaurant.order.application.makeorderusecase.OrderDish;
 import com.froi.restaurant.restaurant.domain.Restaurant;
-import com.froi.restaurant.restaurant.domain.RestaurantDish;
-import com.froi.restaurant.restaurant.infrastructure.outputports.FindRestaurantDish;
-import com.froi.restaurant.restaurant.infrastructure.outputports.FindRestaurantOutputPort;
+import com.froi.restaurant.restaurant.infrastructure.outputports.db.CreateRestaurantOutputPort;
+import com.froi.restaurant.restaurant.infrastructure.outputports.db.FindRestaurantDish;
+import com.froi.restaurant.restaurant.infrastructure.outputports.db.FindRestaurantOutputPort;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @PersistenceAdapter
 @Transactional
-public class RestaurantDbOutputAdapter implements FindRestaurantOutputPort, FindRestaurantDish {
+public class RestaurantDbOutputAdapter implements FindRestaurantOutputPort, FindRestaurantDish, CreateRestaurantOutputPort {
 
     private RestaurantDbEntityRepository restaurantDbEntityRepository;
     private RestaurantDishDbEntityRepository restaurantDishDbEntityRepository;
@@ -51,5 +48,11 @@ public class RestaurantDbOutputAdapter implements FindRestaurantOutputPort, Find
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Dish with id %s not found", orderDish.getDishId())));
         dish.setNote(orderDish.getDescription());
         return dish;
+    }
+
+    @Override
+    public void createRestaurant(Restaurant restaurant) {
+        RestaurantDbEntity restaurantDbEntity = RestaurantDbEntity.fromDomain(restaurant);
+        restaurantDbEntityRepository.save(restaurantDbEntity);
     }
 }

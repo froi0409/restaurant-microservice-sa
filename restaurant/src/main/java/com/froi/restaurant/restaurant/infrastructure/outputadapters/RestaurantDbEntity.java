@@ -33,7 +33,7 @@ public class RestaurantDbEntity {
     private String phone2;
 
     @Column
-    private String city;
+    private Integer city;
 
     @Column
     private String hotel;
@@ -44,7 +44,7 @@ public class RestaurantDbEntity {
                 .name(name)
                 .phone1(phone1)
                 .phone2(phone2)
-                .city(Integer.parseInt(city))
+                .city(city)
                 .hotel(hotel)
                 .build();
     }
@@ -55,7 +55,7 @@ public class RestaurantDbEntity {
                 restaurant.getName(),
                 restaurant.getPhone1(),
                 restaurant.getPhone2(),
-                restaurant.getCity().toString(),
+                restaurant.getCity(),
                 restaurant.getHotel()
         );
     }

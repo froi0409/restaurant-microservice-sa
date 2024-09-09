@@ -1,4 +1,4 @@
-package com.froi.restaurant.restaurant.infrastructure.outputports;
+package com.froi.restaurant.restaurant.infrastructure.outputports.db;
 
 import com.froi.restaurant.dish.domain.Dish;
 import com.froi.restaurant.order.application.makeorderusecase.OrderDish;
