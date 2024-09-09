@@ -20,4 +20,14 @@ public interface OrderDbEntityRepository extends JpaRepository<OrderDbEntity, St
             "JOIN DishDbEntity d ON od.dish = d.id")
     List<OrderCostsInfo> findOrderDetails();
 
+    @Query(value = "SELECT ord.restaurant, r.name, SUM(ord.total) " +
+            "FROM \"order\" AS ord " +
+            "JOIN restaurant r ON ord.restaurant = r.id " +
+            "WHERE ord.paid_date IS NOT NULL " +
+            "GROUP BY ord.restaurant, r.name " +
+            "ORDER BY SUM(ord.total) DESC", nativeQuery = true)
+    List<Object[]> findRestaurantTotalOrderSummaries();
+
+    List<OrderDbEntity> findAllByRestaurantAndPaidDateNotNull(String restaurantId);
+
 }

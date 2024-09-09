@@ -2,6 +2,7 @@ package com.froi.restaurant.order.infrastructure.inputadapters.restapi;
 
 import com.froi.restaurant.common.WebAdapter;
 import com.froi.restaurant.common.exceptions.NetworkMicroserviceException;
+import com.froi.restaurant.order.application.findorderusecase.BestRestaurantOrdersResponse;
 import com.froi.restaurant.order.application.findorderusecase.OrderCostsInfo;
 import com.froi.restaurant.order.application.makeorderusecase.MakeOrderRequest;
 import com.froi.restaurant.order.application.paidorderusecase.PayOrderRequest;
@@ -78,6 +79,24 @@ public class OrderControllerAdapter {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orderCostsInfo);
+    }
+
+    @GetMapping("/allOrders/{restaurantId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Order>> findOrdersByRestaurantId(@PathVariable String restaurantId) {
+        List<Order> orders = findOrderInputPort.findOrdersByRestaurantId(restaurantId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(orders);
+    }
+
+    @GetMapping("/best")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BestRestaurantOrdersResponse> findBestRestaurantOrders() {
+        BestRestaurantOrdersResponse bestRestaurantOrdersResponse = findOrderInputPort.findBestRestaurantOrders();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(bestRestaurantOrdersResponse);
     }
 
 }

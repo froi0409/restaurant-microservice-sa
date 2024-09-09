@@ -2,6 +2,7 @@ package com.froi.restaurant.order.infrastructure.outputadapters.db;
 
 import com.froi.restaurant.common.PersistenceAdapter;
 import com.froi.restaurant.dish.domain.Dish;
+import com.froi.restaurant.order.application.findorderusecase.BestRestaurantOrdersResponse;
 import com.froi.restaurant.order.application.findorderusecase.OrderCostsInfo;
 import com.froi.restaurant.order.domain.Order;
 import com.froi.restaurant.order.infrastructure.outputports.db.FindOrderOutputPort;
@@ -13,7 +14,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @PersistenceAdapter
@@ -71,6 +74,46 @@ public class OrderDbOutputAdapter implements MakeOrderOutputPort, FindOrderOutpu
     @Override
     public List<OrderCostsInfo> findOrderCostsInfo() {
         return orderDbRepository.findOrderDetails();
+    }
+
+    @Override
+    public List<Order> findOrdersByRestaurantId(String restaurantId) {
+        List<OrderDbEntity> ordersDb = orderDbRepository.findAllByRestaurantAndPaidDateNotNull(restaurantId);
+        if (ordersDb.isEmpty()) {
+            throw new EntityNotFoundException(String.format("Orders with restaurant id %s not found", restaurantId));
+        }
+        List<Order> orders = new ArrayList<>();
+        for (OrderDbEntity orderDbEntity : ordersDb) {
+            Order order = orderDbEntity.toDomain();
+            List<Dish> orderDetails = orderDetailDbRepository.findAllByOrder(orderDbEntity.getId())
+                    .stream()
+                    .map(OrderDetailDbEntity::toDomainDishId)
+                    .toList();
+            order.setOrderDetail(orderDetails);
+            orders.add(order);
+        }
+        return orders;
+    }
+
+    @Override
+    public BestRestaurantOrdersResponse findBestRestaurantOrders() {
+        List<Object[]> bestRestaurant = orderDbRepository.findRestaurantTotalOrderSummaries();
+        if (bestRestaurant.isEmpty()) {
+            throw new EntityNotFoundException("Best restaurant not found");
+        }
+        Object[] bestRestaurantInfo = bestRestaurant.getFirst();
+        String restaurantId = (String) bestRestaurantInfo[0];
+        String restaurantName = (String) bestRestaurantInfo[1];
+        BigDecimal totalOrders = (BigDecimal) bestRestaurantInfo[2];
+
+        List<Order> orders = findOrdersByRestaurantId(restaurantId);
+
+        return BestRestaurantOrdersResponse.builder()
+                .restaurantId(restaurantId)
+                .restaurantName(restaurantName)
+                .totalOrders(totalOrders)
+                .orders(orders)
+                .build();
     }
 
 

@@ -27,4 +27,14 @@ public class FindOrderUseCase implements FindOrdersInputPort {
     public List<OrderCostsInfo> findOrderCostsInfo() {
         return orderDbOutputAdapter.findOrderCostsInfo();
     }
+
+    @Override
+    public List<Order> findOrdersByRestaurantId(String restaurantId) {
+        return orderDbOutputAdapter.findOrdersByRestaurantId(restaurantId);
+    }
+
+    @Override
+    public BestRestaurantOrdersResponse findBestRestaurantOrders() {
+        return orderDbOutputAdapter.findBestRestaurantOrders();
+    }
 }
