@@ -1,12 +1,14 @@
 package com.froi.restaurant.dish.infrastructure.outputadapters;
 
 import com.froi.restaurant.common.PersistenceAdapter;
+import com.froi.restaurant.dish.domain.Dish;
+import com.froi.restaurant.dish.infrastructure.outputports.db.CreateDishOutputPort;
 import com.froi.restaurant.dish.infrastructure.outputports.db.FindDishOutputPort;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @PersistenceAdapter
-public class DishDbOutputAdapter implements FindDishOutputPort {
+public class DishDbOutputAdapter implements FindDishOutputPort, CreateDishOutputPort {
 
     private DishDbEntityRepository dishDbEntityRepository;
 
@@ -20,5 +22,11 @@ public class DishDbOutputAdapter implements FindDishOutputPort {
         DishDbEntity dishDbEntity = dishDbEntityRepository.findById(dishId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Dish with id %s not found", dishId)));
         return dishDbEntity.getName();
+    }
+
+    @Override
+    public void createDish(Dish dish) {
+        DishDbEntity dishDbEntity = DishDbEntity.fromDomain(dish);
+        dishDbEntityRepository.save(dishDbEntity);
     }
 }

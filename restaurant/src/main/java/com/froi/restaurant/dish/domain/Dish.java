@@ -15,13 +15,19 @@ import java.util.UUID;
 public class Dish {
     private UUID id;
     private String name;
-    private double cost;
-    private double currentPrice;
+    private Double cost;
+    private Double currentPrice;
     private String note;
 
     public void validate() throws DishException {
         if (name == null || name.isBlank()) {
             throw new DishException("Name cannot be null or empty");
+        }
+        if (cost == null) {
+            throw new DishException("Cost cannot be null");
+        }
+        if (currentPrice == null) {
+            throw new DishException("Current price cannot be null");
         }
         if (cost < 0) {
             throw new DishException("Cost cannot be negative");
