@@ -2,10 +2,12 @@ package com.froi.restaurant.order.infrastructure.outputadapters.db;
 
 import com.froi.restaurant.common.PersistenceAdapter;
 import com.froi.restaurant.dish.domain.Dish;
+import com.froi.restaurant.order.application.findorderusecase.OrderCostsInfo;
 import com.froi.restaurant.order.domain.Order;
 import com.froi.restaurant.order.infrastructure.outputports.db.FindOrderOutputPort;
 import com.froi.restaurant.order.infrastructure.outputports.db.MakeOrderOutputPort;
 import com.froi.restaurant.order.infrastructure.outputports.db.UpdateOrderOutputPort;
+import com.froi.restaurant.restaurant.domain.Restaurant;
 import com.froi.restaurant.restaurant.infrastructure.outputadapters.RestaurantDbOutputAdapter;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +47,17 @@ public class OrderDbOutputAdapter implements MakeOrderOutputPort, FindOrderOutpu
 
     @Override
     public Order findOrderdById(String orderId) {
-        Order order = orderDbRepository.findById(orderId).map(OrderDbEntity::toDomain)
+        OrderDbEntity orderDbEntity = orderDbRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Order with id %s not found", orderId)));
+        Order order = orderDbEntity.toDomain();
 
         List<Dish> orderDetails = orderDetailDbRepository.findAllByOrder(orderId)
                 .stream()
                 .map(OrderDetailDbEntity::toDomainDishId)
                 .toList();
+
+        Restaurant restaurant = restaurantDbOutputAdapter.findRestaurantById(orderDbEntity.getRestaurant());
+        order.setRestaurant(restaurant);
 
         order.setOrderDetail(orderDetails);
         return order;
@@ -60,6 +66,11 @@ public class OrderDbOutputAdapter implements MakeOrderOutputPort, FindOrderOutpu
     @Override
     public String findRestaurantIdByOrderId(String orderId) {
         return orderDbRepository.findRestaurantIdByOrderId(orderId);
+    }
+
+    @Override
+    public List<OrderCostsInfo> findOrderCostsInfo() {
+        return orderDbRepository.findOrderDetails();
     }
 
 
